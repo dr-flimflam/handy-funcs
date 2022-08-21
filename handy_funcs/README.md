@@ -18,7 +18,7 @@ this functions prints text letter by letter with typing sounds.
 this function prints like delay_print, then will use input().
 ##### arguments:
 - qustion - the qustion to print
-- output - this is a list of posible answers. if input() is not in the ist, it will ask again. 
+- output - this is a list of posible answers. if input() is not in the list, it will ask again. 
 - play_sound - this determines if typing noises will be played.
 - do_auput - a short for "do auto output". determines if an "output" list shuold generate automaticly. for example, if the qustion was "|yes| or |no|", the auto_output will be ["yes", "no"]
 
@@ -33,9 +33,9 @@ dose the same as delay_ask, but prints normally.
 ### PATH functions
 
 ##### relative_path_to_full(rel_path)
-this function turns relative PATH to full PATH.
+this function turns relative path to full path.
 ##### arguments:
-- rel_path - the relative PATH you want to convert.
+- rel_path - the relative path you want to convert.
 
 returns the full path.
 
