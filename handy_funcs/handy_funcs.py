@@ -1,4 +1,3 @@
-    
 from time import sleep         
 import sys         
 import random          
@@ -108,3 +107,30 @@ def delay_ask(qustion, output = None, play_sound = True, do_auput=True):
 
 def relative_path_to_full(rel_path):
     return "{}\{}".format(dir, rel_path)
+
+
+#property funcs
+def int_property(item):
+    properties = {}
+    if (item % 2) == 0:
+        properties["is_even":True]
+    else:
+        properties["is_even":False]
+    properties["len":len(str(item))]
+    return properties
+
+def str_property(item):
+    properties = {}
+    properties["len":len(item)]
+    properties["is_alphabetic":item.isalpha()]
+    properties["is_lower_case":item.islower()]
+    return properties
+
+def list_properties(item):
+    properties = {}
+    types = []
+    properties["len":len(item)]
+    for i in item:
+        types.append(type(i))
+    properties["types":types]
+    return properties
