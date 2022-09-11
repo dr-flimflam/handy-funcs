@@ -137,7 +137,7 @@ def list_properties(item):
 
 
 #file functions
-def import_var(var_path, create_var=False, var=None, file_name=None):
+def import_var(var_path, file_name, create_var=False, var=None):
     try:
         return pickle.load(open(var_path+"\{}.dat".format(file_name), "rb"))
     except:
