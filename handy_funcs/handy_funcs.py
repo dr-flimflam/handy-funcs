@@ -134,3 +134,16 @@ def list_properties(item):
         types.append(type(i))
     properties["types":types]
     return properties
+
+
+#file functions
+def import_var(var_path, create_var=False, var=None, file_name=None):
+    try:
+        return pickle.load(open(var_path+"\{}.dat".format(file_name), "rb"))
+    except:
+        if create_var:
+            pickle.dump(var, open(var_path+"\{}.dat".format(file_name), "wb"))
+        else:
+            print("no file was found")
+def export_var(var, var_path, file_name):
+    pickle.dump(var, open(var_path+"\{}.dat".format(file_name), "wb"))
