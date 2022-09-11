@@ -2,7 +2,8 @@ from time import sleep
 import sys         
 import random          
 import os                  
-from pygame import mixer           
+from pygame import mixer
+import pickle        
 os.system('cls')           
 mixer.init()           
 dir = os.path.abspath(os.path.dirname(__file__))      
@@ -98,8 +99,6 @@ def delay_ask(qustion, output = None, play_sound = True, do_auput=True):
         print("")          
         return input()         
 
-
-#print funcs
 
 
 #path funcs
