@@ -105,44 +105,49 @@ def delay_ask(qustion, output = None, play_sound = True, do_auput=True):
 
 
 def relative_path_to_full(rel_path):
-    return "{}\{}".format(dir, rel_path)
+    return os.path.join(dir, rel_path)
 
 
 #property funcs
 def int_property(item):
     properties = {}
     if (item % 2) == 0:
-        properties["is_even":True]
+        properties["is_even"]=True
     else:
-        properties["is_even":False]
-    properties["len":len(str(item))]
+        properties["is_even"]=False
+    properties["len"]=len(str(item))
     return properties
 
 def str_property(item):
     properties = {}
-    properties["len":len(item)]
-    properties["is_alphabetic":item.isalpha()]
-    properties["is_lower_case":item.islower()]
+    properties["len"]=len(item)
+    properties["is_alphabetic"]=item.isalpha()
+    properties["is_lower_case"]=item.islower()
     return properties
 
 def list_properties(item):
     properties = {}
     types = []
-    properties["len":len(item)]
+    properties["len"]=len(item)
     for i in item:
         types.append(type(i))
-    properties["types":types]
+    properties["types"]=types
     return properties
 
 
 #file functions
 def import_var(var_path, file_name, create_var=False, var=None):
     try:
-        return pickle.load(open(var_path+"\{}.dat".format(file_name), "rb"))
+        with open(var_path+"\{}.dat".format(file_name), "rb") as pickle_stream:
+            item=pickle.load(pickle_stream)
+            return item
     except:
         if create_var:
-            pickle.dump(var, open(var_path+"\{}.dat".format(file_name), "wb"))
+            with open(var_path+"\{}.dat".format(file_name), "wb") as pickle_stream:
+                pickle.dump(var, pickle_stream)
+                return var
         else:
             print("no file was found")
 def export_var(var, var_path, file_name):
-    pickle.dump(var, open(var_path+"\{}.dat".format(file_name), "wb"))
+    with open(var_path+"\{}.dat".format(file_name), "wb") as pickle_stream:
+        pickle.dump(var, pickle_stream)
