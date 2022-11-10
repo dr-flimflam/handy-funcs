@@ -1,153 +1,87 @@
-from time import sleep         
-import sys         
-import random          
-import os                  
-from pygame import mixer
-import pickle        
-os.system('cls')           
-mixer.init()           
-dir = os.path.abspath(os.path.dirname(__file__))      
-sys.path.append(dir)           
+import discord
+from random import randint
+from time import sleep
+import sys
+import os
 
-#print funcs
-
-
-def delay_print(txt, play_sound = True):           
-    for i in txt:          
-        if i != "~":               
-            sys.stdout.write(i)        
-            sys.stdout.flush()         
-            sound=mixer.Sound("{}\sys\sounds\sound{}.wav".format(dir, str(random.randint(1,3))))          
-            if i != " ":           
-                if play_sound:         
-                    sound.play()           
-                sleep(0.13)        
-        else:          
-            sleep(0.1)         
-            os.system('cls')           
-            sleep(0.9)         
-def ask(qustion, output = None, do_auput=True):           
-    var_output = output
-    line_loc = []
-    line_locc = []
-    auto_output = []
-    for i in range(len(qustion)):
-        if qustion[i] == "|":
-            line_loc.append(i)
-    for i in range(len(line_loc)):
-            if (i % 2) == 0:
-                line_locc.append([line_loc[i],line_loc[i+1]])
-
-    for i in line_locc:
-        auto_output.append(qustion[i[0]:i[1]])
-    for i in range(len(auto_output)):
-        auto_output[i] = auto_output[i][1:]
-    if do_auput:
-        var_output = auto_output
-    print(qustion)    
-    isntinout = True           
-    if var_output != None:         
-                
-        while isntinout:           
-            u=input()
-            if u in var_output:          
-                isntinout = False          
-            else:          
-                print("this answer is not an option")        
-                        
-        return u        
-    else:          
-        print("")          
-        return input()            
+from botui import ButtonView, next_stage
 
 
 
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
+shut_status = {}
+JOKES = [['ach', 'bless you'],['tank', "you're wellcome"],['weekend', 'Weekend do anything we want!'],['Radio', 'Radio not, here I come!'],['Bless', "but I didn't sneeze!"],['shore', 'shore hope you like bad jokes!'],['water', 'Water you asking so many questions for, just open up!'],['candice', 'candice joke get any worse?'],['orange', 'orange you going to let me in?'],['theodore', "theodore wasn't opened so I knocked."],['weirdo', "weirdo you think you're going?"],['fix', "fix the doorbell' I've been knocking forever! "],['disis', 'disis the police, open up!'],['I nitu', 'I nitu use the bathroom, open the door!'],['ice cream', 'ICE CREAM SO YOU CAN HEAR ME!'],['needle', 'needle little help opening the door!'],['ears', "'ears another joke for ya!"],['kanga', "actually, it's kanga-ROO!"],['howel', 'howel you know unless you open the door?'],['CD', 'CD person knocking on the door?'],['adore', 'adore is between us, so open up!'],['a little old lady', "hey, I didn't know you could yodel!"],['annie', 'annie body home?'],['boo', "don't cry, it's just a joke!"],['spell', 'okay, W-H-O!'],['double', 'W!'],['says', 'says me!'],['yurap', "no, you're a poo!"],['dejav', 'knock knock!'],['Billy Bob Joe Penny', 'really? how many billy bob joe penny do you know?'],['hawai','i am fine, how are you?']]
+
+        
+@client.event
+async def on_ready():
+    print(f'We have logged in as {client.user}')
 
 
+@client.event
+async def on_message(message):
+
+    if message.author == client.user:
+        return
+    if message.content == "$knock_knock" or message.content == "$kk":
+        await start_joke(message)
+        
+
+    if "$shut_kk" == message.content:
+        if message.author.id == 801747239332610088:
+            await message.delete()
+            shut_status[message.author.id] = True
+        
+    
+    
+    if "$PASS1_shut_kk" == message.content:
+        if message.author.id == 801747239332610088:
+            if shut_status[message.author.id]:
+                await message.delete()
+                sys.exit()
+                shut_status[message.author.id] = False
+            
+            
       
-def delay_ask(qustion, output = None, play_sound = True, do_auput=True):          
-    var_output = output
-    line_loc = []
-    line_locc = []
-    auto_output = []
-    for i in range(len(qustion)):
-        if qustion[i] == "|":
-            line_loc.append(i)
-    for i in range(len(line_loc)):
-            if (i % 2) == 0:
-                line_locc.append([line_loc[i],line_loc[i+1]])
+async def second(data_dict):
+    current_stage = "second"
+    data_dict["current_stage"]=current_stage
+    joke = JOKES[data_dict["rand"]]
+    return await data_dict["channel"].send(joke[1])
 
-    for i in line_locc:
-        auto_output.append(qustion[i[0]:i[1]])
-    for i in range(len(auto_output)):
-        auto_output[i] = auto_output[i][1:]
-    if do_auput:
-        var_output = auto_output
-    delay_print(qustion, play_sound)       
-    isntinout = True           
-    if var_output != None:         
-        print("")          
-        while isntinout:           
-            u=input()
-            if u in var_output:          
-                isntinout = False          
-            else:          
-                delay_print("this answer is not an option")        
-                print("")          
-        return u        
-    else:          
-        print("")          
-        return input()         
+        
+async def first(data_dict):
+    current_stage = "first"
+    data_dict["current_stage"]=current_stage
+    joke = JOKES[data_dict["rand"]]
+    data_dict["buttons"][current_stage]=[{
+        "callback_func": next_stage,
+        "label": '{} who'.format(joke[0]),
+        "style": discord.ButtonStyle.blurple}]
+    return await data_dict["channel"].send(joke[0], view=ButtonView(data_dict))
 
 
 
-#path funcs
+async def start_joke(message):
+    
+    author = message.author
+    data_dict = {
+        "current_stage": "zero",
+        "message": message, 
+        "channel": message.channel,
+        "author": author,
+        "rand":randint(0,len(JOKES)-1),
+        "buttons": {"zero":[
+                    {"label":"who's there?", 
+                    "style":discord.ButtonStyle.primary, 
+                    "callback_func":next_stage}]},
+        "flow":{"zero":first,
+                "first": second,
+        }
+    }
+   
+    return await data_dict["channel"].send("Knock Knock!", view=ButtonView(data_dict))
 
-
-def relative_path_to_full(rel_path):
-    return os.path.join(dir, rel_path)
-
-
-#property funcs
-def int_property(item):
-    properties = {}
-    if (item % 2) == 0:
-        properties["is_even"]=True
-    else:
-        properties["is_even"]=False
-    properties["len"]=len(str(item))
-    return properties
-
-def str_property(item):
-    properties = {}
-    properties["len"]=len(item)
-    properties["is_alphabetic"]=item.isalpha()
-    properties["is_lower_case"]=item.islower()
-    return properties
-
-def list_properties(item):
-    properties = {}
-    types = []
-    properties["len"]=len(item)
-    for i in item:
-        types.append(type(i))
-    properties["types"]=types
-    return properties
-
-
-#file functions
-def import_var(var_path, file_name, create_var=False, var=None):
-    try:
-        with open(var_path+"\{}.dat".format(file_name), "rb") as pickle_stream:
-            item=pickle.load(pickle_stream)
-            return item
-    except:
-        if create_var:
-            with open(var_path+"\{}.dat".format(file_name), "wb") as pickle_stream:
-                pickle.dump(var, pickle_stream)
-                return var
-        else:
-            print("no file was found")
-def export_var(var, var_path, file_name):
-    with open(var_path+"\{}.dat".format(file_name), "wb") as pickle_stream:
-        pickle.dump(var, pickle_stream)
+client.run('OTczMTYzODY5MDAwMzEwODM0.Ynjneg.KS_Agalpj6K1UlizFfkvGFyMdwg')
