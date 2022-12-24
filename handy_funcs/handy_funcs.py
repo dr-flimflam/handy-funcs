@@ -30,7 +30,7 @@ def delay_print(txt, play_sound = True):
             sleep(0.1)         
             os.system('cls')           
             sleep(0.9)         
-def ask(qustion, output = None, do_auput=False):           
+def ask(qustion, output = None, do_auput=True):           
     var_output = output
     line_loc = []
     line_locc = []
