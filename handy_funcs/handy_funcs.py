@@ -6,8 +6,12 @@ from pygame import mixer
 import pickle        
 os.system('cls')           
 mixer.init()           
-dir = os.path.abspath(os.path.dirname(__file__))      
-sys.path.append(dir)           
+
+
+  
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))           
+
 
 #print funcs
 
@@ -17,7 +21,7 @@ def delay_print(txt, play_sound = True):
         if i != "~":               
             sys.stdout.write(i)        
             sys.stdout.flush()         
-            sound=mixer.Sound("{}\sys\sounds\sound{}.wav".format(dir, str(random.randint(1,3))))          
+            sound=mixer.Sound("{}\sys\sounds\sound{}.wav".format(get_dir(), str(random.randint(1,3))))          
             if i != " ":           
                 if play_sound:         
                     sound.play()           
@@ -26,7 +30,7 @@ def delay_print(txt, play_sound = True):
             sleep(0.1)         
             os.system('cls')           
             sleep(0.9)         
-def ask(qustion, output = None, do_auput=True):           
+def ask(qustion, output = None, do_auput=False):           
     var_output = output
     line_loc = []
     line_locc = []
@@ -104,12 +108,13 @@ def delay_ask(qustion, output = None, play_sound = True, do_auput=True):
         return input()         
 
 
-
+print(__file__)
 #path funcs
+def get_dir():
+    return os.path.abspath(os.path.dirname(__file__))    
 
-
-def relative_path_to_full(rel_path):
-    return os.path.join(dir, rel_path)
+def relative_path_to_full(rel_path, rel_path_to_handy_funcs):
+    return os.path.join(get_dir().replace(f'\\{rel_path_to_handy_funcs}', ''), rel_path)
 
 
 #property funcs
